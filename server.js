@@ -13,9 +13,11 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json({ limit: "50mb", extended: true }))
 
 const db = require('./app/models');
-db.sequelize.sync()
+db.sequelize.sync({
+    // force: true
+    })
     .then((result) => {
-        console.log(result);
+        // console.log(result);
     })
     .catch((err) => {
         console.log(err);

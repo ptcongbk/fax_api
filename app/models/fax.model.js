@@ -48,7 +48,15 @@ module.exports = (sequelize, Sequelize) => {
 
         sender_fax: {
             type: Sequelize.STRING(100)
-        }
+        },
+
+        send_date: {
+            type: Sequelize.DATE  
+        },
+        
+        total_price: {
+            type: Sequelize.DECIMAL
+        },
     });
     
     return Fax;
