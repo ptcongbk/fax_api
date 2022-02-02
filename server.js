@@ -14,7 +14,7 @@ app.use(bodyParser.json({ limit: "50mb", extended: true }))
 
 const db = require('./app/models');
 db.sequelize.sync({
-    // force: true
+        //force: true
     })
     .then((result) => {
         // console.log(result);

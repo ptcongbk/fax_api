@@ -74,7 +74,7 @@ exports.send = async (req, res) => {
     
     switch(senderSubscriptionId){
         case 1: // for testing only
-            if(totalSpent >= 0.0001) overBudget = true
+            if(totalSpent >= 1) overBudget = true
             break
         case 2:
             if(totalSpent >= 8) overBudget = true
