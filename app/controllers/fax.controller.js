@@ -199,7 +199,7 @@ exports.send = async (req, res) => {
             })
 
         res.status(status).json({
-            message: message
+            message: message + total_price.toString()
         })
     })
 }
