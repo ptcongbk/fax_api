@@ -10,11 +10,11 @@ router.use('/auth', auth)
 
 // Upload routes
 router.use('/media/upload-multipart-data', uploaderMiddleware)
-//router.use('/media', authMiddleware)
+router.use('/media', authMiddleware)
 router.use('/media', upload)
 
 // Fax routes
-//router.use('/fax', authMiddleware)
+router.use('/fax', authMiddleware)
 router.use('/fax', fax)
 
 module.exports = router
