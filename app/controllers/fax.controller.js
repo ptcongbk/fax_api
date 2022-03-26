@@ -16,6 +16,10 @@ const Sequelize = db.Sequelize;
 
 //Send
 exports.send = async (req, res) => {
+    res.status(200).json({
+        message: "Called to send. Not send to fax service"
+    })
+    return
     //get request header
     const source = req.body['source'] || 'node'
     const senderName = req.body['sender_name']

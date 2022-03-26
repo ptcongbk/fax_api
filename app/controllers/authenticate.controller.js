@@ -6,8 +6,8 @@ const iDeviceReceiptVerify = require('node-apple-receipt-verify')
 
 iDeviceReceiptVerify.config({
     secret: config.IAP_SECRET_KEY,
-    environment: ['production', 'sandbox'],
-    ignoreExpired: true,
+    environment: [config.IAP_MODE], //change production here
+    ignoreExpired: config.IAP_MODE === 'sandbox'?false:true,
     verbose: true
 })
 
@@ -17,10 +17,11 @@ module.exports = {
 
         try{
             const products = await iDeviceReceiptVerify.validate({
-                receipt: iDeviceReceipt
-            })
+                  receipt: iDeviceReceipt
+                });
 
             //empty
+            console.log(products)
             if(products.length === 0){
                 res.status(403).json({
                     message: "not products"
@@ -29,32 +30,22 @@ module.exports = {
             }
 
             const secret = req.app.get('jwt-secret')
-            var purchasedDate = 0
+            var purchaseDate = 0
             var productId = ""
             var expiredAt = 0
-
             for(let item of products){
-                //lifetime
-                if(item.productId === config.IAP_LIFETIME){
-                    productId = config.IAP_LIFETIME
-                    purchasedDate = item.purchasedDate
-                    break
+                if (item.expirationDate > expiredAt) //get latest expired
+                {
+                    productId = item.productId
+                    expiredAt = item.expirationDate
+                    purchaseDate = item.purchaseDate
                 }
-
-                if(item.productId === config.IAP_MONTHLY){
-                    productId = config.IAP_MONTHLY
-                    expiredAt = expiredAt > item.expirationDate ? expiredAt : item.expirationDate
-                    purchaseDate = expiredAt > item.expirationDate ? purchaseDate : item.purchaseDate
-                    continue
-                }
-
-                productId = item.productId
-                expiredAt = expiredAt > item.expirationDate ? expiredAt : item.expirationDate
-                purchaseDate = expiredAt > item.expirationDate ? purchaseDate : item.purchaseDate
             }
-
+            if(expiredAt !== 0 && config.IAP_MODE ==="sandbox"){
+                expiredAt = Date.now() + 6.048e+8; //add 1 week
+            }
             var expiredIn = Number.parseInt((expiredAt - Date.now()) / 1000, 10)
-            if(expireIn < 1){
+            if(expiredIn < 1){
                 res.status(403).json({
                     message: "receipt expired"
                 })
@@ -65,9 +56,9 @@ module.exports = {
             const weekBySec = 60 * 60 * 24 * 7
             expiredIn = expiredIn > weekBySec ? weekBySec : expiredIn
             const token = jwt.sign({
-                data: productId + purchasedDate.toString()
+                data: productId + purchaseDate.toString()
             }, config.JWT_SECRET_KEY, {
-                expiredIn: expiredIn
+                expiresIn: expiredIn
             })
 
             res.status(200).json({
@@ -76,6 +67,7 @@ module.exports = {
                 "token": token 
             })
         }catch(error){
+            console.log(error)
             res.status(400).json({
                 message: error == null || error == undefined ? 'Bad request' : error
             })
