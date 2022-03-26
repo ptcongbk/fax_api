@@ -34,13 +34,14 @@ module.exports = {
             var productId = ""
             var expiredAt = 0
             for(let item of products){
-                if (item.expirationDate > expiredAt) //get latest expired
+                if (item.expirationDate > expiredAt && item.transactionId === item.originalTransactionId) //get latest expired
                 {
                     productId = item.productId
                     expiredAt = item.expirationDate
                     purchaseDate = item.purchaseDate
                 }
             }
+            console.log(expiredAt)
             if(expiredAt !== 0 && config.IAP_MODE ==="sandbox"){
                 expiredAt = Date.now() + 6.048e+8; //add 1 week
             }
