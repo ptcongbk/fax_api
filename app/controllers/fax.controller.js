@@ -9,6 +9,7 @@ const FaxApi = new api.FAXApi(
 const requestIp = require('request-ip')
 const moment = require('moment')
 const db = require("../models");
+const { strictEqual } = require('assert')
 const Fax = db.Fax;
 const Media = db.Media;
 const Op = db.Sequelize.Op;
@@ -16,10 +17,6 @@ const Sequelize = db.Sequelize;
 
 //Send
 exports.send = async (req, res) => {
-    res.status(200).json({
-        message: "Called to send. Not send to fax service"
-    })
-    return
     //get request header
     const source = req.body['source'] || 'node'
     const senderName = req.body['sender_name']
@@ -50,18 +47,18 @@ exports.send = async (req, res) => {
         Get total spending over 30 days and check with subscription id
         1: Week, 2: Month, 3: Yearly
     */
-    let interval = 0
-    switch(senderSubscriptionId){
-        case 1:
-            interval = 7
-            break
-        case 2:
-            interval = 30
-            break
-        default:
-            interval = 365
-    }
-    const faxes = await Fax.findAll({
+    // let interval = 0
+    // switch(senderSubscriptionId){
+    //     case 1:
+    //         interval = 7
+    //         break
+    //     case 2:
+    //         interval = 30
+    //         break
+    //     default:
+    //         interval = 365
+    // }
+    /*const faxes = await Fax.findAll({
         where: {
          sender_apple_id: req.body['apple_id'] ,
          send_date: {
@@ -78,7 +75,7 @@ exports.send = async (req, res) => {
     
     switch(senderSubscriptionId){
         case 1: // for testing only
-            if(totalSpent >= 1) overBudget = true
+            if(totalSpent >= 5) overBudget = true
             break
         case 2:
             if(totalSpent >= 8) overBudget = true
@@ -92,7 +89,7 @@ exports.send = async (req, res) => {
         return res.status(400).json({
             message: "over budget"
         })
-    }
+    }*/
 
     // return res.status(400).json({
     //     message: "testing"
@@ -131,7 +128,7 @@ exports.send = async (req, res) => {
                 .then((response) => {
 
                     const rawMessages = response.body.data.messages
-                    // console.log('after call clicksend apis', rawMessages)
+                    console.log('after call clicksend apis', rawMessages)
                     if (rawMessages.length === 0) {
                         reject({
                             status: 400,
@@ -203,8 +200,7 @@ exports.send = async (req, res) => {
             })
 
         res.status(status).json({
-            message: message + total_price.toString()
+            message: message + ' ' + total_price.toString()
         })
     })
 }
-
