@@ -6,8 +6,8 @@ module.exports = {
     TOKEN_EXPIRED_IN: "1h",
     JWT_SECRET_KEY: "faxapi2@2!dev",
     IAP_SECRET_KEY: "f0023b3504e246868622e1f90606543f",
-    IAP_YEARLY: "unicornmobile.io.faxpro.yearly",
-    IAP_MONTHLY: "unicornmobile.io.faxpro.monthly",
-    IAP_WEEKLY: "unicornmobile.io.faxpro.weekly",
+    IAP_YEARLY: "ufax.io.annually",
+    IAP_MONTHLY: "ufax.io.monthly",
+    IAP_WEEKLY: "ufax.io.weekly",
     IAP_MODE: "sandbox"
 }

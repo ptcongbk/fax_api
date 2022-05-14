@@ -46,7 +46,6 @@ module.exports = {
                     expiredAt = item.expirationDate
                     purchaseDate = item.purchaseDate
                     originalOrderId = item.originalTransactionId
-                    
                     break
                 }
                 else{
@@ -60,11 +59,7 @@ module.exports = {
                     }
                 }
             }
-            console.log('expired at', expiredAt)
-            console.log('originalOrderId: ', originalOrderId)
-            console.log('purchaseDate:', purchaseDate)
-            console.log('date order: ', moment.utc(purchaseDate).toDate())
-            console.log('product id: ', productId)
+            console.log(moment.utc(purchaseDate).toDate())
             
             const faxes = await Fax.findAll({
                 where: {

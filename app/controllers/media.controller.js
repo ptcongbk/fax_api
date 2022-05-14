@@ -44,7 +44,7 @@ exports.upload = (req, res) => {
                 const statusCode = 500
                 const errorMessage = 'Internal Error'
                 console.log(statusCode, errorMessage)
-                res.status(statusCode).json({
+                req.status(statusCode).json({
                     message: errorMessage
                 })
             })   
@@ -55,7 +55,7 @@ exports.upload = (req, res) => {
 
             console.error(err)
             
-            res.status(statusCode).json({
+            req.status(statusCode).json({
                 message: errorMessage
             })
         })
@@ -97,22 +97,20 @@ exports.uploadMultipartData = (req, res) => {
                     date_added: created_at,
                     date_deleted: deleted_at
                 })
-            }).catch(function(err) {
-                console.log(err)
+            }).catch(() => {
                 const statusCode = 500
                 const errorMessage = 'Internal Error'
 
-                res.status(statusCode).json({
+                req.status(statusCode).json({
                     message: errorMessage
                 })
             })
         })
         .catch(function(err){
-            console.log(err)
             const statusCode = err.response.statusCode || 400;
             const errorMessage = err.response.response_msg || 'Bad request'
 
-            res.status(statusCode).json({
+            req.status(statusCode).json({
                 message: errorMessage
             })
         })
